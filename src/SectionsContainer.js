@@ -146,9 +146,11 @@ export default class SectionsContainer extends React.Component {
             const value = disableScroll.value;
 
             const element = document.getElementsByClassName(className)[0];
-            const style = element.style;
 
-            if (style[property] === value) return;
+            if (element) {
+                const style = element.style;
+                if (style[property] === value) return;
+            }
         }
 
 

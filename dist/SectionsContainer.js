@@ -183,9 +183,11 @@ var SectionsContainer = function (_React$Component) {
                 var value = disableScroll.value;
 
                 var element = document.getElementsByClassName(className)[0];
-                var style = element.style;
 
-                if (style[property] === value) return;
+                if (element) {
+                    var style = element.style;
+                    if (style[property] === value) return;
+                }
             }
 
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
