@@ -12,6 +12,8 @@ var React = _interopRequireWildcard(_react);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -182,12 +184,12 @@ var SectionsContainer = function (_React$Component) {
                 var property = disableScroll.property;
                 var value = disableScroll.value;
 
-                var element = document.getElementsByClassName(className)[0];
+                var some = [].concat(_toConsumableArray(document.getElementsByClassName(className))).some(function (el) {
+                    var style = el.style;
+                    return style[property] === value;
+                });
 
-                if (element) {
-                    var style = element.style;
-                    if (style[property] === value) return;
-                }
+                if (some) return;
             }
 
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
