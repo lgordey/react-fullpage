@@ -52,18 +52,18 @@ export default class SectionsContainer extends React.Component {
             }
 
             if (this.props.touchNavigation) {
-              this._handleTouchNav();
+                this._handleTouchNav();
             }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-      if(this.props.activeSection !== nextProps.activeSection) {
-          this.setState({activeSection: nextProps.activeSection})
-          this._setAnchor(nextProps.activeSection);
-          this._handleSectionTransition(nextProps.activeSection);
-          this._addActiveClass();
-      }
+        if (this.props.activeSection !== nextProps.activeSection) {
+            this.setState({ activeSection: nextProps.activeSection })
+            this._setAnchor(nextProps.activeSection);
+            this._handleSectionTransition(nextProps.activeSection);
+            this._addActiveClass();
+        }
     }
 
     _removeDefaultEventListeners() {
@@ -122,7 +122,7 @@ export default class SectionsContainer extends React.Component {
         document.querySelector('body').style.overflow = 'hidden';
     }
 
-     _removeOverflowFromBody() {
+    _removeOverflowFromBody() {
         document.querySelector('body').style.overflow = 'initial';
     }
 
@@ -138,6 +138,20 @@ export default class SectionsContainer extends React.Component {
 
     _handleMouseWheel(event) {
         const e = window.event || event; // old IE support
+        const disableScroll = this.props.disableScroll;
+
+        if (disableScroll) {
+            const className = disableScroll.className;
+            const property = disableScroll.property;
+            const value = disableScroll.value;
+
+            const element = document.getElementsByClassName(className)[0];
+            const style = element.style;
+
+            if (style[property] === value) return;
+        }
+
+
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         const activeSection = this.state.activeSection - delta;
 
@@ -194,60 +208,60 @@ export default class SectionsContainer extends React.Component {
         this._handleSectionTransition(activeSection);
         this._addActiveClass();
     }
-    
+
     _handleTouchNav() {
-    var that = this;
+        var that = this;
 
-    var touchsurface = document.querySelector("." + this.props.className),
-    swipedir,
-    startX,
-    startY,
-    dist,
-    distX,
-    distY,
-    threshold = 50, //required min distance traveled to be considered swipe
-    restraint = 100, // maximum distance allowed at the same time in perpendicular direction
-    allowedTime = 1000, // maximum time allowed to travel that distance
-    elapsedTime,
-    startTime,
-    handleswipe = function(swipedir){console.log(swipedir);}
-  
-    touchsurface.addEventListener('touchstart', function(e){
-        var touchobj = e.changedTouches[0]
-        swipedir = 'none'
-        dist = 0
-        startX = touchobj.pageX
-        startY = touchobj.pageY
-        startTime = new Date().getTime() // record time when finger first makes contact with surface
-        // e.preventDefault()
-    }, false)
-  
-    touchsurface.addEventListener('touchmove', function(e){
-        e.preventDefault() // prevent scrolling when inside DIV
-    }, false)
-  
-    touchsurface.addEventListener('touchend', function(e){
-        var touchobj = e.changedTouches[0]
-        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
-        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
-        elapsedTime = new Date().getTime() - startTime // get time elapsed
-        if (elapsedTime <= allowedTime){ // first condition for awipe met
-            if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
-              swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
-              var direction = swipedir === 'down' ? that.state.activeSection - 1 : swipedir === 'up' ? that.state.activeSection + 1 : -1;
-              var hash = that.props.anchors[direction];
+        var touchsurface = document.querySelector("." + this.props.className),
+            swipedir,
+            startX,
+            startY,
+            dist,
+            distX,
+            distY,
+            threshold = 50, //required min distance traveled to be considered swipe
+            restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+            allowedTime = 1000, // maximum time allowed to travel that distance
+            elapsedTime,
+            startTime,
+            handleswipe = function (swipedir) { console.log(swipedir); }
 
-              if (!that.props.anchors.length || hash) {
-                window.location.hash = '#' + hash;
-              }
+        touchsurface.addEventListener('touchstart', function (e) {
+            var touchobj = e.changedTouches[0]
+            swipedir = 'none'
+            dist = 0
+            startX = touchobj.pageX
+            startY = touchobj.pageY
+            startTime = new Date().getTime() // record time when finger first makes contact with surface
+            // e.preventDefault()
+        }, false)
 
-              that._handleSectionTransition(direction);
+        touchsurface.addEventListener('touchmove', function (e) {
+            e.preventDefault() // prevent scrolling when inside DIV
+        }, false)
+
+        touchsurface.addEventListener('touchend', function (e) {
+            var touchobj = e.changedTouches[0]
+            distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+            distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+            elapsedTime = new Date().getTime() - startTime // get time elapsed
+            if (elapsedTime <= allowedTime) { // first condition for awipe met
+                if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) { // 2nd condition for vertical swipe met
+                    swipedir = (distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                    var direction = swipedir === 'down' ? that.state.activeSection - 1 : swipedir === 'up' ? that.state.activeSection + 1 : -1;
+                    var hash = that.props.anchors[direction];
+
+                    if (!that.props.anchors.length || hash) {
+                        window.location.hash = '#' + hash;
+                    }
+
+                    that._handleSectionTransition(direction);
+                }
             }
-        }
-        handleswipe(swipedir)
-        // e.preventDefault()
-    }, false)
-  }
+            handleswipe(swipedir)
+            // e.preventDefault()
+        }, false)
+    }
 
     _handleAnchor() {
         const hash = window.location.hash.substring(1);
@@ -311,13 +325,13 @@ export default class SectionsContainer extends React.Component {
 
             return (
                 <a href={`#${link}`} key={index} className={this.props.navigationAnchorClass || 'Navigation-Anchor'}
-                   style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
+                    style={this.props.navigationAnchorClass ? null : anchorStyle}></a>
             );
         });
 
         return (
             <div className={this.props.navigationClass || 'Navigation'}
-                 style={this.props.navigationClass ? null : navigationStyle}>
+                style={this.props.navigationClass ? null : navigationStyle}>
                 {anchors}
             </div>
         );
@@ -357,6 +371,7 @@ SectionsContainer.defaultProps = {
     arrowNavigation: true,
     activeSection: 0,
     touchNavigation: true,
+    disableScroll: null
 };
 
 SectionsContainer.propTypes = {
@@ -375,6 +390,7 @@ SectionsContainer.propTypes = {
     arrowNavigation: React.PropTypes.bool,
     activeSection: React.PropTypes.number,
     touchNavigation: React.PropTypes.bool,
+    disableScroll: React.PropTypes.object
 };
 
 SectionsContainer.childContextTypes = {

@@ -175,6 +175,19 @@ var SectionsContainer = function (_React$Component) {
         key: '_handleMouseWheel',
         value: function _handleMouseWheel(event) {
             var e = window.event || event; // old IE support
+            var disableScroll = this.props.disableScroll;
+
+            if (disableScroll) {
+                var className = disableScroll.className;
+                var property = disableScroll.property;
+                var value = disableScroll.value;
+
+                var element = document.getElementsByClassName(className)[0];
+                var style = element.style;
+
+                if (style[property] === value) return;
+            }
+
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             var activeSection = this.state.activeSection - delta;
 
@@ -220,7 +233,7 @@ var SectionsContainer = function (_React$Component) {
     }, {
         key: '_handleArrowKeys',
         value: function _handleArrowKeys(e) {
-            // if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            // if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
             //     e.preventDefault(); // Prevent unwanted scrolling on Firefox
             // }
             var event = window.event ? window.event : e;
@@ -425,7 +438,8 @@ SectionsContainer.defaultProps = {
     sectionPaddingBottom: '0',
     arrowNavigation: true,
     activeSection: 0,
-    touchNavigation: true
+    touchNavigation: true,
+    disableScroll: null
 };
 
 SectionsContainer.propTypes = {
@@ -443,7 +457,8 @@ SectionsContainer.propTypes = {
     sectionPaddingBottom: React.PropTypes.string,
     arrowNavigation: React.PropTypes.bool,
     activeSection: React.PropTypes.number,
-    touchNavigation: React.PropTypes.bool
+    touchNavigation: React.PropTypes.bool,
+    disableScroll: React.PropTypes.object
 };
 
 SectionsContainer.childContextTypes = {
